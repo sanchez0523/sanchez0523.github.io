@@ -1,0 +1,86 @@
+---
+import { SITE, NAV } from '~/consts';
+import ThemeToggle from './ThemeToggle.astro';
+
+const { pathname } = Astro.url;
+const isActive = (href: string) => {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(href + '/');
+};
+---
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="/" class="logo" aria-label={SITE.title}>
+      <span class="name">sj</span><span class="paren">()</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        {NAV.map((item) => (
+          <li>
+            <a href={item.href} class:list={['nav-link', { active: isActive(item.href) }]}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="trailing">
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: saturate(180%) blur(8px);
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: 64px;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .logo .paren { color: var(--muted); font-weight: 500; }
+
+  .nav { flex: 1; display: flex; justify-content: center; }
+  .nav ul { display: flex; gap: 28px; }
+  .nav-link {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.01em;
+    transition: color 120ms var(--ease);
+    padding: 4px 0;
+  }
+  .nav-link:hover { color: var(--text); }
+  .nav-link.active { color: var(--text); }
+
+  .trailing {
+    min-width: 64px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 640px) {
+    .header-inner { height: 56px; gap: 12px; }
+    .nav { flex: unset; }
+    .nav ul { gap: 16px; }
+    .nav-link { font-size: 12px; }
+    .trailing { min-width: 32px; }
+  }
+</style>

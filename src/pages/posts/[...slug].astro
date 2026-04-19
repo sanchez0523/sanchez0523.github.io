@@ -1,0 +1,37 @@
+---
+import PostLayout from '~/layouts/PostLayout.astro';
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const all = await getCollection('posts', ({ data }) => !data.draft);
+  const posts = all.sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+  return posts.map((post, i) => {
+    const prev = i > 0 ? posts[i - 1] : null;
+    const next = i < posts.length - 1 ? posts[i + 1] : null;
+    return {
+      params: { slug: post.id },
+      props: { post, prev, next },
+    };
+  });
+}
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  prev: CollectionEntry<'posts'> | null;
+  next: CollectionEntry<'posts'> | null;
+}
+
+const { post, prev, next } = Astro.props;
+const { Content, remarkPluginFrontmatter } = await render(post);
+const minutes = (remarkPluginFrontmatter as any).minutesRead ?? 1;
+---
+
+<PostLayout
+  post={post}
+  minutes={minutes}
+  prev={prev ? { id: prev.id, serial: prev.data.serial } : null}
+  next={next ? { id: next.id, serial: next.data.serial } : null}
+>
+  <Content />
+</PostLayout>

@@ -1,0 +1,17 @@
+---
+import { SITE } from '~/consts';
+interface Props {
+  serial: number;
+  date: Date;
+}
+const { serial, date } = Astro.props;
+const serialStr = String(serial).padStart(4, '0');
+const dateStr = date.toISOString().slice(0, 10);
+---
+
+<div class="signoff">
+  <span class="dash">—</span><br />
+  #{serialStr} · {dateStr} · {SITE.location}<br />
+  {SITE.authorShort}()
+  <span class="mark" aria-hidden="true"></span>
+</div>

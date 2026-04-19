@@ -1,0 +1,53 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostRow from '~/components/PostRow.astro';
+import { SITE } from '~/consts';
+import { getCollection, render } from 'astro:content';
+
+const all = await getCollection('posts', ({ data }) => !data.draft);
+const posts = all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const latest = posts.slice(0, 3);
+
+const withMinutes = await Promise.all(
+  latest.map(async (p) => {
+    const { remarkPluginFrontmatter } = await render(p);
+    return { post: p, minutes: (remarkPluginFrontmatter as any).minutesRead ?? 1 };
+  }),
+);
+---
+
+<BaseLayout>
+  <section class="wrap hero">
+    <p class="eyebrow">now building</p>
+
+    <article class="hero-product">
+      <div class="pulse-col">
+        <span class="pulse" aria-hidden="true"></span>
+      </div>
+      <div>
+        <p class="meta"><span class="accent">active</span> · open source · mit</p>
+        <h1 class="product-title">Nexos — 설정 없는 MQTT 대시보드</h1>
+        <p class="product-desc">
+          ESP32, Raspberry Pi를 꽂으면 토픽이 대시보드 카드로 자동 변환됩니다.
+          Grafana 설정에 시간 쓰지 마세요.
+        </p>
+        <div class="product-links">
+          <a href={SITE.nexosRepo} target="_blank" rel="noopener">github →</a>
+          <a href="/posts/">build log →</a>
+        </div>
+      </div>
+    </article>
+
+    <div class="hero-tagline">
+      <span class="dot" aria-hidden="true"></span>
+      <span>{SITE.tagline}</span>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-top: 56px;">
+    <p class="eyebrow">latest</p>
+    <div class="posts">
+      {withMinutes.map(({ post, minutes }) => <PostRow post={post} minutes={minutes} />)}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,61 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Signoff from '~/components/Signoff.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  minutes: number;
+  prev?: { id: string; serial: number } | null;
+  next?: { id: string; serial: number } | null;
+}
+const { post, minutes, prev, next } = Astro.props;
+const serial = String(post.data.serial).padStart(4, '0');
+const dateStr = post.data.date.toISOString().slice(0, 10);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description ?? post.data.title}
+  ogType="article"
+  publishedAt={post.data.date}
+>
+  <article class="wrap post">
+    <div class="post-meta">
+      <span class="num">#{serial}</span>
+      <span class="sep">/</span>
+      <span>{dateStr}</span>
+      <span class="sep">/</span>
+      <span>{post.data.category}</span>
+      <span class="sep">/</span>
+      <span>{minutes} min read</span>
+    </div>
+    <h1 class="post-title">{post.data.title}</h1>
+    {post.data.description && <p class="post-desc">{post.data.description}</p>}
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    <Signoff serial={post.data.serial} date={post.data.date} />
+
+    {(prev || next) && (
+      <nav class="post-nav" aria-label="Post navigation">
+        <div>
+          {prev && (
+            <a class="prev" href={`/posts/${prev.id}/`}>
+              #{String(prev.serial).padStart(4, '0')}
+            </a>
+          )}
+        </div>
+        <div>
+          {next && (
+            <a class="next" href={`/posts/${next.id}/`}>
+              #{String(next.serial).padStart(4, '0')}
+            </a>
+          )}
+        </div>
+      </nav>
+    )}
+  </article>
+</BaseLayout>

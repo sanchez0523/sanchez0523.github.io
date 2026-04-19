@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props {
+  post: CollectionEntry<'posts'>;
+  minutes: number;
+}
+const { post, minutes } = Astro.props;
+const serial = String(post.data.serial).padStart(4, '0');
+const dateStr = post.data.date.toISOString().slice(0, 10);
+---
+
+<a class="post-row" href={`/posts/${post.id}/`}>
+  <span class="num">#{serial}</span>
+  <div class="main">
+    <span class="post-title">{post.data.title}</span>
+    <span class="sub">
+      <span class="cat-badge">{post.data.category}</span>
+      <span class="sep">·</span>
+      <span>{minutes} min</span>
+    </span>
+  </div>
+  <span class="date">{dateStr}</span>
+</a>

@@ -1,0 +1,43 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { SITE } from '~/consts';
+
+const updatedAt = '2026-04-19';
+---
+
+<BaseLayout title="now" description="지금 하고 있는 일 — inspired by nownownow.com">
+  <section class="wrap" style="padding-top: 64px;">
+    <p class="eyebrow">now · updated {updatedAt}</p>
+    <h1 style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 32px;">
+      지금 무엇을 하고 있는가
+    </h1>
+
+    <div class="now-list">
+      <div class="now-item">
+        <span class="now-dot active" aria-hidden="true"></span>
+        <div class="now-text">
+          <strong>Nexos MVP 개발<span class="status active">· active</span></strong>
+          <span>self-hosted MQTT dashboard, 2026-Q2 v0.1 목표</span>
+        </div>
+      </div>
+      <div class="now-item">
+        <span class="now-dot active" aria-hidden="true"></span>
+        <div class="now-text">
+          <strong>Weekly build log 작성<span class="status active">· active</span></strong>
+          <span>주 1편, 빌드 과정을 공개</span>
+        </div>
+      </div>
+      <div class="now-item">
+        <span class="now-dot" aria-hidden="true"></span>
+        <div class="now-text">
+          <strong>ROADMAP 다듬기<span class="status">· paused</span></strong>
+          <span>MVP 이후 로드맵 · Q3에 재검토</span>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top: 48px; font-size: 14px; color: var(--muted); font-family: var(--mono);">
+      ⟶ <a href="https://nownownow.com/about" target="_blank" rel="noopener" style="border-bottom: 1px solid var(--border-strong);">about /now pages</a>
+    </p>
+  </section>
+</BaseLayout>

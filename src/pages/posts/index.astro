@@ -1,0 +1,94 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import PostRow from '~/components/PostRow.astro';
+import { CATEGORIES } from '~/consts';
+import { getCollection, render } from 'astro:content';
+
+const all = await getCollection('posts', ({ data }) => !data.draft);
+const posts = all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const withMinutes = await Promise.all(
+  posts.map(async (p) => {
+    const { remarkPluginFrontmatter } = await render(p);
+    return { post: p, minutes: (remarkPluginFrontmatter as any).minutesRead ?? 1 };
+  }),
+);
+
+const counts = Object.keys(CATEGORIES).reduce<Record<string, number>>((acc, k) => {
+  acc[k] = posts.filter((p) => p.data.category === k).length;
+  return acc;
+}, {});
+const total = posts.length;
+---
+
+<BaseLayout title="posts" description="All logs · Nexos build journey and other technical writing">
+  <section class="wrap" style="padding-top: 64px;">
+    <p class="eyebrow">all logs · {total}</p>
+
+    <div class="filters" role="tablist">
+      <button class="filter active" data-filter="all">
+        all <span class="count">{total}</span>
+      </button>
+      {Object.entries(CATEGORIES).map(([key, cat]) => (
+        <button class="filter" data-filter={key}>
+          {cat.label} <span class="count">{counts[key] ?? 0}</span>
+        </button>
+      ))}
+    </div>
+
+    <div class="posts" id="post-list">
+      {withMinutes.map(({ post, minutes }) => (
+        <div data-cat={post.data.category}>
+          <PostRow post={post} minutes={minutes} />
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: all 120ms var(--ease);
+    letter-spacing: 0.02em;
+  }
+  .filter:hover { color: var(--text); border-color: var(--border-strong); }
+  .filter.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .filter .count {
+    color: var(--dim);
+    margin-left: 4px;
+    font-size: 11px;
+  }
+  .filter.active .count { color: var(--accent); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.filter').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll<HTMLElement>('#post-list > div').forEach((row) => {
+        const cat = row.dataset.cat;
+        row.style.display = filter === 'all' || cat === filter ? '' : 'none';
+      });
+    });
+  });
+</script>
