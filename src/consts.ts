@@ -1,8 +1,8 @@
 export const SITE = {
-  title: 'sj()',
+  title: 'sanchez()',
   description: 'Building self-hosted tools in public — IoT, Go, and the craft of shipping.',
   author: 'Sanchez Jang',
-  authorShort: 'sj',
+  authorShort: 'sanchez',
   location: 'seoul',
   url: 'https://sanchez0523.github.io',
   tagline: 'build small. ship slow.',

@@ -12,7 +12,7 @@ const isActive = (href: string) => {
 <header class="site-header">
   <div class="wrap header-inner">
     <a href="/" class="logo" aria-label={SITE.title}>
-      <span class="name">sj</span><span class="paren">()</span>
+      <span class="name">sanchez</span><span class="paren">()</span>
     </a>
     <nav class="nav" aria-label="Primary">
       <ul>
@@ -77,10 +77,15 @@ const isActive = (href: string) => {
   }
 
   @media (max-width: 640px) {
-    .header-inner { height: 56px; gap: 12px; }
+    .header-inner { height: 56px; gap: 10px; }
+    .logo { font-size: 14px; }
     .nav { flex: unset; }
-    .nav ul { gap: 16px; }
+    .nav ul { gap: 14px; }
     .nav-link { font-size: 12px; }
     .trailing { min-width: 32px; }
+  }
+  @media (max-width: 420px) {
+    .logo .paren { display: none; }
+    .nav ul { gap: 10px; }
   }
 </style>

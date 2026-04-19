@@ -1,6 +1,6 @@
 # sanchez0523.github.io
 
-Personal blog — **sj() · Engineer's Lab Notebook**.
+Personal blog — **sanchez() · Engineer's Lab Notebook**.
 
 Built with [Astro](https://astro.build), deployed to GitHub Pages.
 
@@ -40,8 +40,8 @@ Reading time is computed automatically.
 
 Signature:
 
-- Logomark: `sj()`
+- Logomark: `sanchez()`
 - Motif: amber `●` dot
 - Tagline: *build small. ship slow.*
 - Serial: `#0001` monospace counter
-- Signoff: `— / #num / seoul / sj() / ●`
+- Signoff: `— / #num / seoul / sanchez() / ●`
